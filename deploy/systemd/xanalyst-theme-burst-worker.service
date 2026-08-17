@@ -1,0 +1,25 @@
+[Unit]
+Description=xanalyst Theme Burst Detector V1.5 (spec 002 single tick)
+After=postgresql.service redis-server.service
+Wants=postgresql.service redis-server.service
+
+[Service]
+Type=oneshot
+User=deploy
+WorkingDirectory=/opt/xanalyst
+ExecStart=/opt/xanalyst/venv/bin/python -m services.theme_burst_worker
+EnvironmentFile=/opt/xanalyst/.env
+
+# Memory budget — rev2 M-N6 reconciled:
+# MemoryMax=150M cap (kernel OOM kill threshold)
+# MemoryHigh=120M soft limit (kernel pressure starts)
+# acceptance criteria: peak RSS ≤120MB over 24h
+# predicted_outcomes failure: peak > 130MB (warning band [120, 130] = OK if rare)
+MemoryMax=150M
+MemoryHigh=120M
+
+# rev3 M-N15: 11 buckets × 15s LLM timeout = 165s worst case + overhead → 200s safe.
+TimeoutStartSec=200
+
+StandardOutput=append:/opt/xanalyst/logs/theme_burst_worker.log
+StandardError=append:/opt/xanalyst/logs/theme_burst_worker.log

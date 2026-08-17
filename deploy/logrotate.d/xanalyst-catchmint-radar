@@ -1,0 +1,10 @@
+/opt/xanalyst/logs/catchmint_radar.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    su deploy deploy
+}

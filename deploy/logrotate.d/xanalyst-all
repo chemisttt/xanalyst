@@ -1,0 +1,15 @@
+# xanalyst — all long-running service logs
+# Install: sudo cp deploy/logrotate.d/xanalyst-all /etc/logrotate.d/xanalyst-all
+
+/opt/xanalyst/logs/*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    # logs may be root-owned if service started via sudo historically
+    su root root
+    maxsize 50M
+}

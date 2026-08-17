@@ -1,0 +1,54 @@
+# =============================================================================
+# xanalyst Private Mirror Monitor V1 — cron snippet
+# =============================================================================
+# Append these lines to botuser@203.0.113.10 crontab via `crontab -e`.
+# These are ADDITIONS — do NOT replace the existing crontab.
+#
+# Existing cleanup cron (03:00 MSK) should be EXTENDED to also clean new tables.
+# Find existing line that does:
+#   DELETE FROM channel_messages WHERE message_date < NOW() - INTERVAL '30 days';
+# and replace with the version below.
+# =============================================================================
+
+# REPLACE the existing cleanup line (03:00 MSK = 00:00 UTC) with this extended version:
+0 0 * * * PGPASSWORD=changeme psql -h 127.0.0.1 -U xanalyst -d xanalyst -c "DELETE FROM channel_messages WHERE message_date < NOW() - INTERVAL '30 days'; DELETE FROM twitter_analyses WHERE analyzed_at < NOW() - INTERVAL '30 days'; DELETE FROM mirror_merged_signals WHERE created_at < NOW() - INTERVAL '30 days'; DELETE FROM mirror_digests WHERE created_at < NOW() - INTERVAL '90 days';" >> /opt/xanalyst/logs/cleanup.log 2>&1
+
+# Mirror digest → topic 6894 — PAUSED 2026-08-12 (option A: silence; useless vs live)
+# 0 6 * * * cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.private_mirror_digest morning >> /opt/xanalyst/logs/private_mirror_digest.log 2>&1
+# 0 18 * * * cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.private_mirror_digest evening >> /opt/xanalyst/logs/private_mirror_digest.log 2>&1
+
+# Caller digest → 6894 — PAUSED 2026-08-12 (option A: silence; little alpha vs opening caller channels)
+# 30 5 * * * cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.caller_digest morning >> /opt/xanalyst/logs/caller_digest.log 2>&1
+# 30 17 * * * cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.caller_digest evening >> /opt/xanalyst/logs/caller_digest.log 2>&1
+
+# ADD hourly cleanup для photo passthrough temp files (named-caller CALLER_A/CALLER_B/COMMUNITY):
+# Если private_mirror_dedup упал между download и unlink — файл остаётся. Чистим всё старше 1 часа.
+0 * * * * find /tmp/xanalyst_mirror_photos -mmin +60 -type f -delete 2>/dev/null
+
+# Retention notes:
+#   - channel_messages, twitter_analyses, mirror_merged_signals: 30 days
+#   - mirror_digests: 90 days (longer because they're cheap and useful for hindsight)
+#   - /tmp/xanalyst_mirror_photos: 1 hour (passthrough only, dedup unlinks immediately on success)
+
+
+# =============================================================================
+# Spec 004 — CT Alpha Digest V1 cron entries (DEPLOYED 2026-05-20)
+# =============================================================================
+# Note: existing xanalyst crontab uses DIRECT python invocation (not systemctl).
+# systemd unit files в deploy/systemd/ остаются для optional formal service mgmt
+# но cron работает через прямые python вызовы для simplicity.
+#
+# Crontab is in MSK (UTC+3): 03/09/15/21 MSK = 00/06/12/18 UTC.
+
+# 4 ticks/день: 03/09/15 MSK + 21:05 (staggered от 21:00 daily_summary)
+0 3,9,15 * * * cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.ct_alpha_digest --once >> /opt/xanalyst/logs/ct_alpha_digest.log 2>&1
+5 21 * * *    cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.ct_alpha_digest --once >> /opt/xanalyst/logs/ct_alpha_digest.log 2>&1
+
+# Promise tracker — resolve announced→upcoming→live/missed/unverifiable каждые 30 мин
+*/30 * * * *  cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.ct_digest.promise_cron >> /opt/xanalyst/logs/ct_digest_promise_cron.log 2>&1
+
+# Daily cost + promise-resolution summary @ 23:55 MSK → System Health Mirror topic 6896
+55 23 * * *   cd /opt/xanalyst && /opt/xanalyst/venv/bin/python -m services.ct_digest.cost_summary >> /opt/xanalyst/logs/ct_digest_cost_summary.log 2>&1
+
+# Cleanup ct_* tables (30d retention), 5 мин после основного cleanup в 03:00
+5 3 * * *     PGPASSWORD=changeme psql -h 127.0.0.1 -U xanalyst -d xanalyst -c "DELETE FROM ct_digest_items WHERE ingested_at < NOW() - INTERVAL '30 days'; DELETE FROM ct_promises WHERE created_at < NOW() - INTERVAL '30 days'; DELETE FROM ct_feedback WHERE created_at < NOW() - INTERVAL '30 days'; DELETE FROM ct_digest_ticks WHERE started_at < NOW() - INTERVAL '30 days';" >> /opt/xanalyst/logs/cleanup.log 2>&1

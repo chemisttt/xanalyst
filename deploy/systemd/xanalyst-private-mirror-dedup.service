@@ -1,0 +1,19 @@
+[Unit]
+Description=xanalyst Private Mirror Dedup Engine (Variant C emission + window worker)
+After=network.target postgresql.service redis-server.service xanalyst-private-mirror-monitor.service
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/xanalyst
+EnvironmentFile=/opt/xanalyst/.env
+ExecStart=/opt/xanalyst/venv/bin/python -m services.private_mirror_dedup
+Restart=on-failure
+RestartSec=10
+MemoryMax=150M
+StandardOutput=append:/opt/xanalyst/logs/private_mirror_dedup.log
+StandardError=append:/opt/xanalyst/logs/private_mirror_dedup.log
+
+[Install]
+WantedBy=multi-user.target

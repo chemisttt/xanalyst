@@ -1,0 +1,10 @@
+/opt/xanalyst/logs/private_mirror_*.log {
+    daily
+    rotate 7
+    compress
+    delaycompress
+    missingok
+    notifempty
+    copytruncate
+    su deploy deploy
+}

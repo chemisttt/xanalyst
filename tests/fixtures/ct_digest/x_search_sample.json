@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1800000000000000001",
+    "url": "https://x.com/wh7nft/status/1800000000000000001",
+    "author": {
+      "screen_name": "wh7nft",
+      "followers_count": 25000,
+      "verified": false
+    },
+    "created_at": "2026-05-19T14:30:00.000Z",
+    "text": "public mint live now @abnormalmfers contract 0xae7ab96520de3a18e5e111b5eaab095312d7fe84 — 0.005 ETH",
+    "likes": 142,
+    "rts": 23,
+    "replies": 8,
+    "views": 5200
+  },
+  {
+    "id": "1800000000000000002",
+    "url": "https://x.com/0xvaidhik/status/1800000000000000002",
+    "author": {
+      "screen_name": "0xvaidhik",
+      "followers_count": 18000,
+      "verified": false
+    },
+    "created_at": "2026-05-19T14:35:00.000Z",
+    "text": "DEGEN MINT — Soulseth Penguins drop in 2 hours, WL 0.003 ETH, public 0.005",
+    "likes": 89,
+    "rts": 12,
+    "replies": 4,
+    "views": 3100
+  },
+  {
+    "id": "1800000000000000003",
+    "url": "https://x.com/onchainpepe_anon/status/1800000000000000003",
+    "author": {
+      "screen_name": "onchainpepe_anon",
+      "followers_count": 52,
+      "verified": false
+    },
+    "created_at": "2026-05-19T14:40:00.000Z",
+    "text": "new bonding curve mechanic with per-wallet limiter and duplicate refund — $TESTCOIN no max supply",
+    "likes": 4,
+    "rts": 1,
+    "replies": 0,
+    "views": 220
+  }
+]

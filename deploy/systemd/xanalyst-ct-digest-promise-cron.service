@@ -1,0 +1,18 @@
+[Unit]
+Description=xanalyst CT Digest promise tracker cron (oneshot — every 30 min)
+After=network.target postgresql.service
+
+[Service]
+Type=oneshot
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/xanalyst
+EnvironmentFile=/opt/xanalyst/.env
+ExecStart=/opt/xanalyst/venv/bin/python -m services.ct_digest.promise_cron
+MemoryMax=100M
+TimeoutStartSec=300
+StandardOutput=append:/opt/xanalyst/logs/ct_digest_promise_cron.log
+StandardError=append:/opt/xanalyst/logs/ct_digest_promise_cron.log
+
+[Install]
+WantedBy=multi-user.target

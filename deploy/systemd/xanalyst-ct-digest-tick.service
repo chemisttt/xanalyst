@@ -1,0 +1,18 @@
+[Unit]
+Description=xanalyst CT Alpha Digest tick (oneshot — invoked by cron at 00/06/12/18:05 UTC)
+After=network.target postgresql.service redis-server.service
+
+[Service]
+Type=oneshot
+User=deploy
+Group=deploy
+WorkingDirectory=/opt/xanalyst
+EnvironmentFile=/opt/xanalyst/.env
+ExecStart=/opt/xanalyst/venv/bin/python -m services.ct_alpha_digest --once
+MemoryMax=200M
+TimeoutStartSec=600
+StandardOutput=append:/opt/xanalyst/logs/ct_alpha_digest.log
+StandardError=append:/opt/xanalyst/logs/ct_alpha_digest.log
+
+[Install]
+WantedBy=multi-user.target

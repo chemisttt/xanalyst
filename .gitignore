@@ -1,0 +1,38 @@
+# Окружение и секреты
+.env
+data/
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Claude Code
+.claude/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Логи
+logs/*.log
+
+# Telethon session files
+*.session
+*.session-journal
+
+# Разведка приваток (содержит чувствительные данные)
+private_chats_analysis.md
+private_chats_raw.json
+caller_audit_data.json
+caller_audit_report.md
+
+# spec-flow runtime state (durable artifacts like profile.yaml/decisions/ stay in git)
+.spec-flow/state/
+.spec-flow/verification/
+
+# OS
+.DS_Store
+Thumbs.db

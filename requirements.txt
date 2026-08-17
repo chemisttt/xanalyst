@@ -1,0 +1,36 @@
+# === Основные зависимости ===
+python-dotenv>=1.0.0       # Загрузка .env файлов
+pydantic>=2.0              # Валидация данных и модели
+requests>=2.28.0           # HTTP запросы (Telegram Bot API)
+
+# === База данных ===
+asyncpg>=0.29.0            # Async PostgreSQL
+redis>=5.0.0               # Async Redis (redis.asyncio)
+
+# === Telegram ===
+telethon>=1.36.0           # Userbot мониторинг каналов
+
+# === Discord ===
+discord.py-self>=1.9.2     # Self-bot для Discord мониторинга
+
+# === Twitter ===
+twikit>=2.0.0              # Twitter scraping (через cookies)
+
+# === Telegram Bot ===
+python-telegram-bot>=20.0  # Telegram бот с inline keyboard и командами
+
+# === AI ===
+openai>=1.0.0              # Perplexity API (OpenAI-совместимый) для AI-сводок
+anthropic>=0.34.0,<1.0     # spec 004 — Sonnet 4.x classifier с prompt cache (cache_control)
+
+# === EVM utils ===
+eth-utils>=2.1.0           # spec 004 — EIP-55 checksum для CatchMint promise tracker
+
+# === HTTP fetch для X scraping CLI ===
+curl_cffi>=0.7.0           # spec 004 — x_search tool requires (deploy step 1 check)
+
+# === Тесты (spec 001 task 7) ===
+pytest>=7.4.0              # Test framework
+pytest-asyncio>=0.23.0     # async-test support
+# pytest-postgresql опционален — если установлен, conftest использует ephemeral DB;
+# иначе fallback на DATABASE_TEST_URL (default postgresql://xanalyst:password@localhost:5432/xanalyst_test)

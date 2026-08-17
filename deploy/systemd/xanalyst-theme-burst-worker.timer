@@ -1,0 +1,14 @@
+[Unit]
+Description=Run xanalyst Theme Burst Detector every 5 min (spec 002 V1.5)
+
+[Timer]
+# Initial run 2 minutes after boot
+OnBootSec=2min
+# Subsequent runs: 5 min AFTER previous run ENDS.
+# OnUnitInactiveSec guarantees serialization — никаких overlapping starts.
+OnUnitInactiveSec=5min
+AccuracySec=10s
+Unit=xanalyst-theme-burst-worker.service
+
+[Install]
+WantedBy=timers.target
