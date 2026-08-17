@@ -15,6 +15,7 @@ Python 3.10 asyncio, PostgreSQL, Redis Streams, Telethon, discord.py-self, Twiki
 - `services/twitter_worker.py` — profile scoring
 - `services/theme_burst_worker.py` — discussion anomaly alerts
 - `services/ct_alpha_digest.py` — evening CT digest
+- `evals/ct_digest/golden_v1.json` — held-out human labels for the classifier
 - `shared/source_routing.py` — whitelist + routes (example IDs)
 - `shared/notifier.py` — Bot API send/edit
 

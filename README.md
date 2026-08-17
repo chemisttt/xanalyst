@@ -26,6 +26,7 @@ Personal production pipeline I built and ran: ingest messages from chats the cli
 ```
 services/     workers (ingest, dedup, digest, theme burst, twitter, health)
 shared/       config, db, redis, routing, notifier, llm, metrics
+evals/        held-out CT digest golden set (human labels)
 scripts/      SQL migrations
 deploy/       systemd units + crontab snippet (example paths under /opt/xanalyst)
 tests/        pytest
@@ -42,6 +43,15 @@ pytest tests/test_author_parser.py tests/test_example_routing.py -q
 ```
 
 Postgres + Redis are required for the integration tests (`tests/conftest.py`).
+
+## CT digest eval
+
+Human-labeled held-out set in `evals/ct_digest/golden_v1.json` (n=18). Pass = bucket **and** included match. Injection cases stay in the set.
+
+```bash
+python evals/ct_digest/run.py          # schema + taxonomy + escape
+python evals/ct_digest/run.py --llm    # classify_batch (ANTHROPIC_API_KEY)
+```
 
 ## Config
 
